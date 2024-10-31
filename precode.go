@@ -73,6 +73,11 @@ func postTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if _, exists := tasks[task.ID]; exists {
+		http.Error(w, "Задача уже существует", http.StatusBadRequest)
+		return
+	}
+
 	tasks[task.ID] = task
 
 	w.Header().Set("Content-Type", "application/json")
@@ -108,7 +113,7 @@ func deleteTask(w http.ResponseWriter, r *http.Request) {
 
 	_, exists := tasks[id]
 	if !exists {
-		http.Error(w, "Задачи не существует", http.StatusNotFound)
+		http.Error(w, "Задачи не существует", http.StatusBadRequest)
 		return
 	}
 
